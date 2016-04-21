@@ -1,0 +1,23 @@
+version: '2'
+services:
+  dumbshit: &ourservice
+    build: .
+    links:
+      - redis
+    depends_on:
+      - redis
+    working_dir: /usr/src/app
+    command: bundle exec ruby app.rb -o 0.0.0.0
+    restart: always
+    environment:
+      REDIS_HOST: 'redis'
+      DOCKER_MODE: '1'
+    ports:
+      - 4567
+
+  redis:
+    image: redis
+    volumes:
+      - ./redis:/data
+    ports:
+      - "6379"
