@@ -23,13 +23,9 @@ end
 
 post '/:uuid' do
   uuid = params[:uuid]
-
-  x = request.body.read
-  p x
-  payload = JSON.parse(x)
+  payload = JSON.parse(request.body.read)
 
   r = redis_object.set uuid, payload
-  p r
   return {uuid: uuid}.to_json
 end
 
