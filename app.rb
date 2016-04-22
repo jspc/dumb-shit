@@ -17,7 +17,7 @@ end
 
 post '/' do
   uuid = SecureRandom.uuid
-  payload = JSON.parse(request.body.read)
+  payload = request.body.read
 
   redis_object.set uuid, payload
   return {uuid: uuid}.to_json
@@ -25,9 +25,11 @@ end
 
 post '/:uuid' do
   uuid = params[:uuid]
-  payload = JSON.parse(request.body.read)
+  r = JSON.parse redis_object.get(uuid)
+  p = JSON.parse request.body.read
 
-  r = redis_object.set uuid, payload
+  payload = r.merge(p).to_json
+  redis_object.set uuid, payload
   return {uuid: uuid}.to_json
 end
 
